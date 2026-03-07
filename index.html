@@ -2,29 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Reservas 360</title>
+    <title>Reserva 360 - Restaurante</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: sans-serif; }
-        #tour-container { width: 100vw; height: 100vh; position: relative; }
+        body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; }
+        
+        /* El tour ocupa el 70% de la pantalla */
+        #tour-container { flex: 7; position: relative; border-right: 5px solid #333; }
         iframe { width: 100%; height: 100%; border: none; }
-        #interfaz-reserva { 
-            position: absolute; top: 20px; right: 20px; 
-            background: rgba(255,255,255,0.9); padding: 20px; 
-            border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
+        /* El panel de control ocupa el 30% */
+        #panel-reservas { flex: 3; padding: 20px; background: #f4f4f4; overflow-y: auto; }
+        
+        .mesa-card {
+            background: white; padding: 15px; margin-bottom: 10px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .estado-libre { color: green; font-weight: bold; }
+        .estado-reservada { color: red; font-weight: bold; }
+        button { cursor: pointer; padding: 8px 12px; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:disabled { background: #ccc; }
     </style>
 </head>
 <body>
 
     <div id="tour-container">
         <iframe src="https://vt.plushglobalmedia.com/tour/TT1A9HJLMH"></iframe>
-        
-        <div id="interfaz-reserva">
-            <h3>Reserva tu Mesa</h3>
-            <p>Estado: <span style="color: green;">Conectado al Tour</span></p>
-            <button onclick="alert('Aquí abriremos el formulario de reserva')">Reservar Mesa Seleccionada</button>
-        </div>
     </div>
 
+    <div id="panel-reservas">
+        <h2>Panel de Reservas</h2>
+        <p>Explora el local en el 360 y elige tu mesa aquí:</p>
+        <div id="lista-mesas">
+            </div>
+    </div>
+
+    <script>
+        // Función para cargar las mesas desde nuestro archivo JSON
+        fetch('mesas.json')
+            .then(response => response.json())
+            .then(data => {
+                const contenedor = document.getElementById('lista-mesas');
+                data.forEach(mesa => {
+                    const card = document.createElement('div');
+                    card.className = 'mesa-card';
+                    card.innerHTML = `
+                        <div>
+                            <strong>${mesa.nombre}</strong><br>
+                            <span class="estado-${mesa.estado}">${mesa.estado.toUpperCase()}</span>
+                        </div>
+                        <button ${mesa.estado === 'reservada' ? 'disabled' : ''} onclick="reservar(${mesa.id})">
+                            ${mesa.estado === 'libre' ? 'Reservar' : 'No disponible'}
+                        </button>
+                    `;
+                    contenedor.appendChild(card);
+                });
+            });
+
+        function reservar(id) {
+            alert("Has seleccionado la mesa " + id + ". ¡Ahora solo falta conectar esto a un formulario!");
+        }
+    </script>
 </body>
 </html>
