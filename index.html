@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Reservas 360</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: sans-serif; }
+        #tour-container { width: 100vw; height: 100vh; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+        #interfaz-reserva { 
+            position: absolute; top: 20px; right: 20px; 
+            background: rgba(255,255,255,0.9); padding: 20px; 
+            border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
 
+    <div id="tour-container">
+        <iframe src="https://vt.plushglobalmedia.com/tour/TT1A9HJLMH"></iframe>
+        
+        <div id="interfaz-reserva">
+            <h3>Reserva tu Mesa</h3>
+            <p>Estado: <span style="color: green;">Conectado al Tour</span></p>
+            <button onclick="alert('Aquí abriremos el formulario de reserva')">Reservar Mesa Seleccionada</button>
+        </div>
+    </div>
+
+</body>
+</html>
