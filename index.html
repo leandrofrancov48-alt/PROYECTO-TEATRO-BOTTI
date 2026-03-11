@@ -2,66 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reserva 360 - Restaurante</title>
-    <style>
-        body { margin: 0; display: flex; height: 100vh; font-family: 'Segoe UI', sans-serif; }
-        
-        /* El tour ocupa el 70% de la pantalla */
-        #tour-container { flex: 7; position: relative; border-right: 5px solid #333; }
-        iframe { width: 100%; height: 100%; border: none; }
+    <title>Tour Virtual de Reservas</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 
-        /* El panel de control ocupa el 30% */
-        #panel-reservas { flex: 3; padding: 20px; background: #f4f4f4; overflow-y: auto; }
-        
-        .mesa-card {
-            background: white; padding: 15px; margin-bottom: 10px;
-            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .estado-libre { color: green; font-weight: bold; }
-        .estado-reservada { color: red; font-weight: bold; }
-        button { cursor: pointer; padding: 8px 12px; background: #007bff; color: white; border: none; border-radius: 4px; }
-        button:disabled { background: #ccc; }
+    <style>
+        body { margin: 0; font-family: sans-serif; }
+        #panorama { width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
 
-    <div id="tour-container">
-        <iframe src="https://vt.plushglobalmedia.com/tour/TT1A9HJLMH"></iframe>
-    </div>
-
-    <div id="panel-reservas">
-        <h2>Panel de Reservas</h2>
-        <p>Explora el local en el 360 y elige tu mesa aquí:</p>
-        <div id="lista-mesas">
-            </div>
-    </div>
+    <div id="panorama"></div>
 
     <script>
-        // Función para cargar las mesas desde nuestro archivo JSON
-        fetch('mesas.json')
-            .then(response => response.json())
-            .then(data => {
-                const contenedor = document.getElementById('lista-mesas');
-                data.forEach(mesa => {
-                    const card = document.createElement('div');
-                    card.className = 'mesa-card';
-                    card.innerHTML = `
-                        <div>
-                            <strong>${mesa.nombre}</strong><br>
-                            <span class="estado-${mesa.estado}">${mesa.estado.toUpperCase()}</span>
-                        </div>
-                        <button ${mesa.estado === 'reservada' ? 'disabled' : ''} onclick="reservar(${mesa.id})">
-                            ${mesa.estado === 'libre' ? 'Reservar' : 'No disponible'}
-                        </button>
-                    `;
-                    contenedor.appendChild(card);
-                });
-            });
+        pannellum.viewer('panorama', {
+            "default": {
+                "firstScene": "entrada", // Le decimos que empiece por la entrada
+                "autoLoad": true,
+                "sceneFadeDuration": 1000, // Hace un efecto de fundido suave al cambiar de foto
+                "hotSpotDebug": true // ¡EL TRUCO SECRETO QUE TE EXPLICO ABAJO!
+            },
 
-        function reservar(id) {
-            alert("Has seleccionado la mesa " + id + ". ¡Ahora solo falta conectar esto a un formulario!");
-        }
+            "scenes": {
+                // --- ESCENA 1: LA ENTRADA ---
+                "entrada": {
+                    "title": "Galería de Entrada",
+                    "type": "equirectangular",
+                    "panorama": "galeria_entrada.jpg",
+                    "hotSpots": [
+                        {
+                            "pitch": -5, // Inclinación arriba/abajo
+                            "yaw": 180,  // Rotación izquierda/derecha
+                            "type": "scene",
+                            "text": "Entrar al Salón Principal",
+                            "sceneId": "principal" // Al hacer clic, carga la escena 'principal'
+                        }
+                    ]
+                },
+
+                // --- ESCENA 2: EL SALÓN PRINCIPAL ---
+                "principal": {
+                    "title": "Salón Principal",
+                    "type": "equirectangular",
+                    "panorama": "salon_escenario.jpg",
+                    "hotSpots": [
+                        {
+                            "pitch": -5,
+                            "yaw": 0,
+                            "type": "scene",
+                            "text": "Volver a la Entrada",
+                            "sceneId": "entrada" // Al hacer clic, nos devuelve a la 'entrada'
+                        },
+                        {
+                            "pitch": -20, 
+                            "yaw": -50, 
+                            "type": "info",
+                            "text": "Reservar esta mesa",
+                            "URL": "javascript:alert('¡Acá conectaremos el formulario de reserva real!')"
+                        }
+                    ]
+                }
+            }
+        });
     </script>
+
 </body>
 </html>
