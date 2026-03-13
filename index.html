@@ -2,11 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tour Virtual de Reservas</title>
-    
+    <title>Tour Virtual de Reservas - Restaurante</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
-
     <style>
         body { margin: 0; font-family: sans-serif; }
         #panorama { width: 100vw; height: 100vh; }
@@ -19,49 +17,85 @@
     <script>
         pannellum.viewer('panorama', {
             "default": {
-                "firstScene": "entrada", // Le decimos que empiece por la entrada
+                "firstScene": "calle", // Arrancamos el tour desde afuera
                 "autoLoad": true,
-                "sceneFadeDuration": 1000, // Hace un efecto de fundido suave al cambiar de foto
-                "hotSpotDebug": true // ¡EL TRUCO SECRETO QUE TE EXPLICO ABAJO!
+                "sceneFadeDuration": 1000,
+                "hotSpotDebug": true // Mantenemos tu superpoder activado
             },
 
             "scenes": {
-                // --- ESCENA 1: LA ENTRADA ---
+                // --- 1. EXTERIOR / CALLE ---
+                "calle": {
+                    "title": "Vista desde la Calle",
+                    "type": "equirectangular",
+                    "panorama": "patio_calle.jpeg",
+                    "hotSpots": [
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Entrar a la Galería", "sceneId": "entrada" }
+                    ]
+                },
+
+                // --- 2. GALERÍA DE ENTRADA ---
                 "entrada": {
                     "title": "Galería de Entrada",
                     "type": "equirectangular",
                     "panorama": "galeria_entrada.jpeg",
                     "hotSpots": [
-                        {
-                            "pitch": -5, // Inclinación arriba/abajo
-                            "yaw": 180,  // Rotación izquierda/derecha
-                            "type": "scene",
-                            "text": "Entrar al Salón Principal",
-                            "sceneId": "principal" // Al hacer clic, carga la escena 'principal'
-                        }
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Salir a la Calle", "sceneId": "calle" },
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Ir a la Terraza", "sceneId": "terraza" },
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Ingresar al Salón de Madera", "sceneId": "salon_madera" }
                     ]
                 },
 
-                // --- ESCENA 2: EL SALÓN PRINCIPAL ---
-                "principal": {
-                    "title": "Salón Principal",
+                // --- 3. TERRAZA CON SOMBRILLAS ---
+                "terraza": {
+                    "title": "Terraza Exterior",
+                    "type": "equirectangular",
+                    "panorama": "terraza_sombrillas.jpeg",
+                    "hotSpots": [
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Volver a la Entrada", "sceneId": "entrada" }
+                    ]
+                },
+
+                // --- 4. SALÓN PISO DE MADERA ---
+                "salon_madera": {
+                    "title": "Salón Principal (Madera)",
+                    "type": "equirectangular",
+                    "panorama": "salon_madera.jpeg",
+                    "hotSpots": [
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Volver a la Galería", "sceneId": "entrada" },
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Ir al Salón Ladrillos", "sceneId": "salon_ladrillos" },
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Ir a Zona Escenario", "sceneId": "salon_escenario" }
+                    ]
+                },
+
+                // --- 5. SALÓN LADRILLOS ---
+                "salon_ladrillos": {
+                    "title": "Salón Ladrillos a la Vista",
+                    "type": "equirectangular",
+                    "panorama": "salon_ladrillos.jpeg",
+                    "hotSpots": [
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Volver al Salón Madera", "sceneId": "salon_madera" }
+                    ]
+                },
+
+                // --- 6. SALÓN ESCENARIO ---
+                "salon_escenario": {
+                    "title": "Salón del Escenario",
                     "type": "equirectangular",
                     "panorama": "salon_escenario.jpeg",
                     "hotSpots": [
-                        {
-                            "pitch": -5,
-                            "yaw": 0,
-                            "type": "scene",
-                            "text": "Volver a la Entrada",
-                            "sceneId": "entrada" // Al hacer clic, nos devuelve a la 'entrada'
-                        },
-                        {
-                            "pitch": -20, 
-                            "yaw": -50, 
-                            "type": "info",
-                            "text": "Reservar esta mesa",
-                            "URL": "javascript:alert('¡Acá conectaremos el formulario de reserva real!')"
-                        }
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Volver hacia atrás", "sceneId": "salon_madera" },
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Ver Salón con Luces", "sceneId": "salon_luces" }
+                    ]
+                },
+
+                // --- 7. SALÓN LUCES ---
+                "salon_luces": {
+                    "title": "Salón Luces",
+                    "type": "equirectangular",
+                    "panorama": "salon_luces.jpeg",
+                    "hotSpots": [
+                        { "pitch": 0, "yaw": 0, "type": "scene", "text": "Volver al Escenario", "sceneId": "salon_escenario" }
                     ]
                 }
             }
